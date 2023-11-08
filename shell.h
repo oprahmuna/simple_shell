@@ -1,6 +1,5 @@
 #ifndef SHELL_H
 #define SHELL_H
-
 /* Headers */
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,17 +8,14 @@
 #include <stddef.h>
 #include <sys/wait.h>
 #include <signal.h>
-
 /* Macros */
 #define BUFFER_SIZE 5024
 #define MAX_ARGS 1024
 #define MAX_NUM_Aliases 100
 #define UNUSED  __attribute__((unused))
-
 static char *cmd __attribute__((unused));
 extern char **environ UNUSED;
 extern int ex_code;
-
 /* Function Prototypes */
 int main(void);
 char *read_command(void);
@@ -44,7 +40,6 @@ int _1exit(char *status __attribute__((unused)), int c, char *a, char **ag);
 int _atoi(const char *str);
 void cd(char *path);
 int process_command(char **argv);
-
 /**
 * struct Node - singly linked list
 * @str: string - (malloc'ed string)
@@ -52,7 +47,7 @@ int process_command(char **argv);
 */
 struct Node
 {
-	char *str;
+        char *str;
 	struct Node *next;
 };
 
