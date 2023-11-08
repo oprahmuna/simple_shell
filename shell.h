@@ -91,9 +91,9 @@ current->next = node;
 }
 void print_list(struct Node *head);
 void free_list(struct Node *head);
-int _env(void);
+char *_getenv(info_t *info, const char *name);
 int _unsetenv(const char *name);
-int _setenv(const char *name, const char *value);
+int populate_env_list(info_t *info);
 void add_env_var(struct Node **head, const char *name, const char *value);
 void update_environ(struct Node *head);
 void handle_sigint(int signo __attribute__((unused)));
