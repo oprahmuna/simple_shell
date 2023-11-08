@@ -21,7 +21,7 @@ extern char **environ UNUSED;
 extern int ex_code;
 
 /* Function Prototypes */
-char *_getline(void);
+int main(void);
 char *read_command(void);
 void hash_handler(char *buff);
 int _strcmp(const char *str1, const char *str2);
