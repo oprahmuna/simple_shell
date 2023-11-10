@@ -47,7 +47,7 @@ int process_command(char **argv);
 */
 struct Node
 {
-        char *str;
+	char *str;
 	struct Node *next;
 };
 
@@ -84,10 +84,11 @@ current = current->next;
 current->next = node;
 }
 }
-void print_list(struct Node *head);
-void free_list(struct Node *head);
-char *_getenv(info_t *info, const char *name);
-int _unsetenv(const char *name);
+void display_list(struct Node *current);
+void release_memory(struct Node *start);
+int show_environment(void);
+int set_environment_variable(const char *var_name, const char *var_value);
+int unset_environment_variable(const char *target_name);
 int populate_env_list(info_t *info);
 void add_env_var(struct Node **head, const char *name, const char *value);
 void update_environ(struct Node *head);

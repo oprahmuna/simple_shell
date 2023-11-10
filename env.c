@@ -1,96 +1,100 @@
 #include "shell.h"
 
 /**
- * print_list - Print the contents of the linked list.
- * @head: The head of the linked list.
+ * display_list - print the contents of the linked list
+ * @current: The current node in the linked list.
  */
-void print_list(struct Node *head)
+void display_list(struct Node *current)
 {
-	while (head != NULL)
+	while (current != NULL)
 	{
-		write(STDOUT_FILENO, head->str, _strlen(head->str));
+		write(STDOUT_FILENO, current->data, _strlen(current->data));
 		write(STDOUT_FILENO, "\n", 1);
-		head = head->next;
+		current = current->next;
 	}
 }
 
 /**
- * free_list - Free up memory allocated for each node in the linked list.
- * @head: The head of the linked list.
+ * release_memory - free up memory allocated for each node in the linked list.
+ * @start: The starting node of the linked list.
  */
-void free_list(struct Node *head)
+void release_memory(struct Node *start)
 {
 	struct Node *temp;
 
-	while (head != NULL)
+	while (start != NULL)
 	{
-		temp = head;
-		head = head->next;
+		temp = start;
+		start = start->next;
 		free(temp);
 	}
 }
 
 /**
- * _getenv - gets the value of an environ variable
- * @info: Structure containing potential arguments. Used to maintain
- * @name: env var name
- *
- * Return: the value
- */
-char *_getenv(info_t *info, const char *name)
-{
-	list_t *node = info->env;
-	char *p;
-
-	while (node)
-	{
-		p = starts_with(node->str, name);
-		if (p && *p)
-			return (p);
-		node = node->next;
-	}
-	return (NULL);
-}
-
-/**
- * _setenv - Set an environment variable.
- * @name: The name of the environment variable.
- * @value: The value to be set.
+ * show_environment - print environment variables.
  *
  * Return: Always 0.
  */
-int _setenv(const char *name, const char *value)
+int show_environment(void)
 {
-	char **env;
-	struct Node *head = NULL;
-	/*extern char **environ;*/
-
-	for (env = environ; *env != NULL; env++)
+	char **env_ptr;
+	struct Node *list_head = NULL;
+	for (env_ptr = environ; *env_ptr != NULL; env_ptr++)
 	{
-		add_node(&head, new_node(*env));
+		add_to_list(&list_head, create_node(*env_ptr));
 	}
 
-	add_env_var(&head, name, value);
-
-	update_environ(head);
-
-	free_list(head);
+	display_list(list_head);
+	release_memory(list_head);
 	return (0);
 }
 
 /**
- * populate_env_list - populates env linked list
- * @info: Structure containing potential arguments. Used to maintain
- *          constant function prototype.
- * Return: Always 0
+ * set_environment_variable - set an environment variable.
+ * @var_name: The name of the environment variable.
+ * @var_value: The value to be set.
+ *
+ * Return: Always 0.
  */
-int populate_env_list(info_t *info)
+int set_environment_variable(const char *var_name, const char *var_value)
 {
-	list_t *node = NULL;
-	size_t i;
+	char **env_ptr;
+	struct Node *list_head = NULL;
 
-	for (i = 0; environ[i]; i++)
-		add_node_end(&node, environ[i], 0);
-	info->env = node;
+	for (env_ptr = environ; *env_ptr != NULL; env_ptr++)
+	{
+		add_to_list(&list_head, create_node(*env_ptr));
+	}
+
+	modify_environment_variable(&list_head, var_name, var_value);
+	update_environment(list_head);
+	release_memory(list_head);
 	return (0);
 }
+
+/**
+ * unset_environment_variable - delete an environment variable.
+ * @target_name: The name of the environment variable to be deleted.
+ *
+ * Return: 0 on success, -1 on failure.
+ */
+int unset_environment_variable(const char *target_name)
+{
+	char **current;
+	char **env_ptr;
+	size_t len = _strlen(target_name);
+
+	for (env_ptr = environ; *env_ptr != NULL; env_ptr++)
+	{
+		if (_strncmp(*env_ptr, target_name, len) == 0 && (*env_ptr)[len] == '=')
+		{
+			for (current = env_ptr; *current != NULL; current++)
+			{
+				*current = *(current + 1);
+			}
+			return (0);
+		}
+	}
+	return (-1);
+}
+
