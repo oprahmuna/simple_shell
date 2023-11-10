@@ -13,6 +13,23 @@ void print_list(struct Node *head)
 		head = head->next;
 	}
 }
+
+/**
+ * free_list - Free up memory allocated for each node in the linked list.
+ * @head: The head of the linked list.
+ */
+void free_list(struct Node *head)
+{
+	struct Node *temp;
+
+	while (head != NULL)
+	{
+		temp = head;
+		head = head->next;
+		free(temp);
+	}
+}
+
 /**
  * _getenv - gets the value of an environ variable
  * @info: Structure containing potential arguments. Used to maintain
